@@ -6,9 +6,11 @@
 4. Configure Startup.cs for IdentityServer4
 
 ## Setup Resources, Clients, Users
-Resources - which API Resources can use
-Clients - which applications can use
-Users - which users can use
+1. Resources - which API Resources can use
+2. Clients - which applications can use
+3. Users - which users can use
+
+refer to the source code ~\Configuration\InMemoryConfiguration.cs
 
 
 ## Configure Startup.cs for IdentityServer4
@@ -16,7 +18,11 @@ Users - which users can use
 ```
 public void ConfigureServices(IServiceCollection services)
 {
-    services.AddIdentityServer();
+    services.AddIdentityServer()
+                    .AddDeveloperSigningCredential()
+                    .AddTestUsers(InMemoryConfiguration.TestUsers().ToList())
+                    .AddInMemoryClients(InMemoryConfiguration.Clients())
+                    .AddInMemoryApiResources(InMemoryConfiguration.ApiResources());
 }
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
