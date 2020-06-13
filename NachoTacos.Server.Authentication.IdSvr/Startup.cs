@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,6 +30,8 @@ namespace NachoTacos.Server.Authentication.IdSvr
                     .AddTestUsers(InMemoryConfiguration.TestUsers().ToList())
                     .AddInMemoryClients(InMemoryConfiguration.Clients())
                     .AddInMemoryApiResources(InMemoryConfiguration.ApiResources());
+
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,15 +43,18 @@ namespace NachoTacos.Server.Authentication.IdSvr
             }
 
             app.UseIdentityServer();
-
+            
             app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
