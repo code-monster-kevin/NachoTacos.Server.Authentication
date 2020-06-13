@@ -1,0 +1,12 @@
+﻿{
+  "profiles": {
+    "NachoTacos.Server.Authentication.IdSvr": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:51454",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
