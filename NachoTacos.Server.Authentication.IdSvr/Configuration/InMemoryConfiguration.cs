@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Models;
+﻿using IdentityServer4;
+using IdentityServer4.Models;
 using IdentityServer4.Test;
 using System.Collections.Generic;
 
@@ -6,6 +7,15 @@ namespace NachoTacos.Server.Authentication.IdSvr.Configuration
 {
     public class InMemoryConfiguration
     {
+        public static IEnumerable<IdentityResource> IdentityResources()
+        {
+            return new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+            };
+        }
+
         public static IEnumerable<ApiResource> ApiResources()
         {
             return new[]
@@ -25,7 +35,23 @@ namespace NachoTacos.Server.Authentication.IdSvr.Configuration
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
                     AllowedScopes = new [] { "nachotacos" }
 
+                },
+                new Client
+                {
+                    ClientId = "nachotacosweb",
+                    ClientSecrets= new [] { new Secret("nachotuesday".Sha256()) },
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireConsent = false,
+                    RequirePkce = true,
+                    RedirectUris = { "https://localhost:44371/signin-oidc" },
+                    PostLogoutRedirectUris = { "https://localhost:44371/signout-callback-oidc" },
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    }
                 }
+
             };
         }
 

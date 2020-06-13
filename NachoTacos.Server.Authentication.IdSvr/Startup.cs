@@ -29,7 +29,8 @@ namespace NachoTacos.Server.Authentication.IdSvr
                     .AddSigningCredential(new X509Certificate2(pfxFilePath, pfxFilePass))
                     .AddTestUsers(InMemoryConfiguration.TestUsers().ToList())
                     .AddInMemoryClients(InMemoryConfiguration.Clients())
-                    .AddInMemoryApiResources(InMemoryConfiguration.ApiResources());
+                    .AddInMemoryApiResources(InMemoryConfiguration.ApiResources())
+                    .AddInMemoryIdentityResources(InMemoryConfiguration.IdentityResources());
 
             services.AddMvc();
         }
