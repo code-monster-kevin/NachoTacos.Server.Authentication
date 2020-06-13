@@ -1,15 +1,14 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using System;
+using System.IO;
+using System.Reflection;
 
 namespace NachoTacos.Server.Authentication.Api
 {
@@ -25,6 +24,31 @@ namespace NachoTacos.Server.Authentication.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "NachoTacos Server Authentication Api", Version = "v1" });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Description = "Basic token authentication",
+                    In = ParameterLocation.Header,
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey
+                });
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
+            });
+
+            string tokenAuthority = Configuration.GetValue<string>("Authentication:Authority");
+            string tokenAudience = Configuration.GetValue<string>("Authentication:Audience");
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.Audience = tokenAudience;
+                        options.Authority = tokenAuthority;
+                    });
+
             services.AddControllers();
         }
 
@@ -36,10 +60,16 @@ namespace NachoTacos.Server.Authentication.Api
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "NachoTacos Server Authentication Api");
+                c.RoutePrefix = string.Empty;
+            });
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
