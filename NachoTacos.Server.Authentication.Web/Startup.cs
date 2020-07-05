@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -24,24 +19,7 @@ namespace NachoTacos.Server.Authentication.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
-            string authority = Configuration.GetValue<string>("Authentication:Authority");
-            string clientId = Configuration.GetValue<string>("Authentication:ClientId");
-            string clientSecret = Configuration.GetValue<string>("Authentication:ClientSecret");
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = "Cookies";
-                options.DefaultChallengeScheme = "oidc";
-            })
-            .AddCookie("Cookies")
-            .AddOpenIdConnect("oidc", options =>
-            {
-                options.Authority = authority;
-                options.ClientId = clientId;
-                options.ClientSecret = clientSecret;
-                options.ResponseType = "code";
-                options.SaveTokens = true;
-            });
+            ConfigureAuthenticationService(services);
 
             services.AddRazorPages()
                     .AddRazorPagesOptions(options => {
@@ -74,6 +52,34 @@ namespace NachoTacos.Server.Authentication.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+            });
+        }
+
+        private void ConfigureAuthenticationService(IServiceCollection services)
+        {
+            string authority = Configuration.GetValue<string>("Authentication:Authority");
+            string clientId = Configuration.GetValue<string>("Authentication:ClientId");
+            string clientSecret = Configuration.GetValue<string>("Authentication:ClientSecret");
+
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies";
+                options.DefaultChallengeScheme = "oidc";
+            })
+            .AddCookie("Cookies")
+            .AddOpenIdConnect("oidc", options =>
+            {
+                options.SignInScheme = "Cookies";
+                options.Authority = authority;
+                options.RequireHttpsMetadata = false;
+                options.ClientId = clientId;
+                options.ClientSecret = clientSecret;
+                options.ResponseType = "code id_token";
+                options.SaveTokens = true;
+                options.GetClaimsFromUserInfoEndpoint = true;
+                options.Scope.Add("nachotacosapi");
+                options.Scope.Add("offline_access");
             });
         }
     }

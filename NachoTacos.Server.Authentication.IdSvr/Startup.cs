@@ -22,6 +22,8 @@ namespace NachoTacos.Server.Authentication.IdSvr
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+
             string pfxFilePath = _configuration.GetValue<string>("SignInCredentials:PFXFile");
             string pfxFilePass = _configuration.GetValue<string>("SignInCredentials:Password");
 
@@ -32,7 +34,6 @@ namespace NachoTacos.Server.Authentication.IdSvr
                     .AddInMemoryApiResources(InMemoryConfiguration.ApiResources())
                     .AddInMemoryIdentityResources(InMemoryConfiguration.IdentityResources());
 
-            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

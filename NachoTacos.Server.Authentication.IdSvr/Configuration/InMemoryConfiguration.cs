@@ -2,6 +2,7 @@
 using IdentityServer4.Models;
 using IdentityServer4.Test;
 using System.Collections.Generic;
+using System.Security.Claims;
 
 namespace NachoTacos.Server.Authentication.IdSvr.Configuration
 {
@@ -12,7 +13,7 @@ namespace NachoTacos.Server.Authentication.IdSvr.Configuration
             return new List<IdentityResource>
             {
                 new IdentityResources.OpenId(),
-                new IdentityResources.Profile(),
+                new IdentityResources.Profile()
             };
         }
 
@@ -20,7 +21,7 @@ namespace NachoTacos.Server.Authentication.IdSvr.Configuration
         {
             return new[]
             {
-                new ApiResource("nachotacos","Nacho Tacos")
+                new ApiResource("nachotacosapi","Nacho Tacos API")
             };
         }
 
@@ -30,28 +31,20 @@ namespace NachoTacos.Server.Authentication.IdSvr.Configuration
             {
                 new Client
                 {
-                    ClientId="nachotacosclient",
-                    ClientSecrets= new [] { new Secret("nachocheese".Sha256()) },
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPasswordAndClientCredentials,
-                    AllowedScopes = new [] { "nachotacos" }
-
-                },
-                new Client
-                {
-                    ClientId = "nachotacosweb",
-                    ClientSecrets= new [] { new Secret("nachotuesday".Sha256()) },
-                    AllowedGrantTypes = GrantTypes.Code,
-                    RequireConsent = false,
-                    RequirePkce = true,
+                    ClientId = "0c680cfc-8c69-4671-a6f4-59bebc1b343f",
+                    ClientSecrets = new [] { new Secret("16753771-82f7-4ea0-9f42-9f67f5234918".Sha256()) },
+                    ClientName = "Nacho Tacos Web",
+                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
                     RedirectUris = { "https://localhost:44371/signin-oidc" },
                     PostLogoutRedirectUris = { "https://localhost:44371/signout-callback-oidc" },
+                    AllowOfflineAccess = true,
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "nachotacosapi"
                     }
                 }
-
             };
         }
 
@@ -61,14 +54,24 @@ namespace NachoTacos.Server.Authentication.IdSvr.Configuration
             {
                 SubjectId = "001",
                 Username = "testuser1@nachotacos.com",
-                Password = "testuser1pass"
+                Password = "testuser1pass",
+                Claims = new[]
+                {
+                    new Claim("name", "Test User 1"),
+                    new Claim("email", "testuser1@nachotacos.com")
+                }
             };
 
             TestUser testUser2 = new TestUser
             {
                 SubjectId = "002",
                 Username = "testuser2@nachotacos.com",
-                Password = "testuser2pass"
+                Password = "testuser2pass",
+                Claims = new[]
+                {
+                    new Claim("name", "Test User 2"),
+                    new Claim("email", "testuser2@nachotacos.com")
+                }
             };
 
             return new[]

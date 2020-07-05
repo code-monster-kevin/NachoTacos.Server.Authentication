@@ -1,0 +1,33 @@
+﻿@page "/private"
+
+@inject AuthenticationStateProvider AuthState
+
+
+<h3>My Private Page</h3>
+
+<p>Hello, @Username</p>
+
+<p>Welcome to your new app.</p>
+
+<p>
+    <a href="/Logout">Logout</a>
+</p>
+
+
+
+@code {
+    private string Username = "Anonymous User";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var state = await AuthState.GetAuthenticationStateAsync();
+
+        Username =
+            state.User.Claims
+            .Where(c => c.Type.Equals("name"))
+            .Select(c => c.Value)
+            .FirstOrDefault() ?? string.Empty;
+
+        await base.OnInitializedAsync();
+    }
+}
