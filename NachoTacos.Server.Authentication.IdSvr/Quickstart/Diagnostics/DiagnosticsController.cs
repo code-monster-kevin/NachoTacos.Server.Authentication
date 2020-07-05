@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace NachoTacos.Server.Authentication.IdSvr
+namespace IdentityServerHost.Quickstart.UI
 {
     [SecurityHeaders]
     [Authorize]

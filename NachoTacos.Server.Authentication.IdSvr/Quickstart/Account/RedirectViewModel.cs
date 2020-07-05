@@ -3,7 +3,7 @@
 
 
 
-namespace NachoTacos.Server.Authentication.IdSvr
+namespace IdentityServerHost.Quickstart.UI
 {
     public class RedirectViewModel
     {

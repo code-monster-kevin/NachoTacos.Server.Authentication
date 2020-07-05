@@ -4,7 +4,7 @@
 
 using System.ComponentModel.DataAnnotations;
 
-namespace NachoTacos.Server.Authentication.IdSvr
+namespace IdentityServerHost.Quickstart.UI
 {
     public class LoginInputModel
     {

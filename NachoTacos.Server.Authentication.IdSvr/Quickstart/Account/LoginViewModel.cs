@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NachoTacos.Server.Authentication.IdSvr
+namespace IdentityServerHost.Quickstart.UI
 {
     public class LoginViewModel : LoginInputModel
     {

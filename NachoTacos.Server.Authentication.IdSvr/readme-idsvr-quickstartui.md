@@ -13,10 +13,10 @@ You can find more details [here](https://github.com/IdentityServer/IdentityServe
 
 ## Install IdentityServer 4 Quickstart UI
 1. Open a new command prompt
-2. Change directory to the Idsvr project folder and run 'dotnet new is4ui'
+2. Change directory to the Idsvr project folder and run the command:
 ```
 
-~\NachoTacos.Server.Authentication.IdSvr> dotnet new is4ui
+iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/IdentityServer/IdentityServer4.Quickstart.UI/main/getmain.ps1'))
 
 ```
 

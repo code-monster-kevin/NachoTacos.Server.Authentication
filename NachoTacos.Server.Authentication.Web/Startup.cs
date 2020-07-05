@@ -59,7 +59,6 @@ namespace NachoTacos.Server.Authentication.Web
         {
             string authority = Configuration.GetValue<string>("Authentication:Authority");
             string clientId = Configuration.GetValue<string>("Authentication:ClientId");
-            string clientSecret = Configuration.GetValue<string>("Authentication:ClientSecret");
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
             services.AddAuthentication(options =>
@@ -74,12 +73,9 @@ namespace NachoTacos.Server.Authentication.Web
                 options.Authority = authority;
                 options.RequireHttpsMetadata = false;
                 options.ClientId = clientId;
-                options.ClientSecret = clientSecret;
-                options.ResponseType = "code id_token";
-                options.SaveTokens = true;
-                options.GetClaimsFromUserInfoEndpoint = true;
-                options.Scope.Add("nachotacosapi");
-                options.Scope.Add("offline_access");
+                options.ResponseType = "code";
+                options.ResponseMode = "form_post";
+                options.UsePkce = true;
             });
         }
     }

@@ -4,7 +4,7 @@
 
 using IdentityServer4.Models;
 
-namespace NachoTacos.Server.Authentication.IdSvr
+namespace IdentityServerHost.Quickstart.UI
 {
     public class ErrorViewModel
     {

@@ -32,12 +32,12 @@ namespace NachoTacos.Server.Authentication.IdSvr.Configuration
                 new Client
                 {
                     ClientId = "0c680cfc-8c69-4671-a6f4-59bebc1b343f",
-                    ClientSecrets = new [] { new Secret("16753771-82f7-4ea0-9f42-9f67f5234918".Sha256()) },
                     ClientName = "Nacho Tacos Web",
-                    AllowedGrantTypes = GrantTypes.HybridAndClientCredentials,
+                    AllowedGrantTypes = GrantTypes.Code,
                     RedirectUris = { "https://localhost:44371/signin-oidc" },
                     PostLogoutRedirectUris = { "https://localhost:44371/signout-callback-oidc" },
-                    AllowOfflineAccess = true,
+                    RequireClientSecret = false,
+                    RequirePkce = true,
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,

@@ -1,5 +1,4 @@
 ﻿@page
-@using Microsoft.AspNetCore.Authentication;
 
 @model NachoTacos.Server.Authentication.Web.Pages.Private.MyPersonalPageModel
 @{
@@ -9,8 +8,6 @@
 <div class="text-center">
     <h1 class="display-4">My Personal Page</h1>
     <p>You've successfully been authenticated!</p>
-    <p><b>Access Token:</b>@await ViewContext.HttpContext.GetTokenAsync("access_token")</p>
-    <p><b>Refresh Token:</b>@await ViewContext.HttpContext.GetTokenAsync("refresh_token")</p>
     <h2>Claims</h2>
     <dl>
         @foreach (var claim in User.Claims)
